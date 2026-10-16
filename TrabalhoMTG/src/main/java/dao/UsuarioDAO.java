@@ -23,7 +23,6 @@ public class UsuarioDAO implements IUsuario{
             }
 
         }
-
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -45,7 +44,6 @@ public class UsuarioDAO implements IUsuario{
             }
 
         }
-
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +52,7 @@ public class UsuarioDAO implements IUsuario{
     }
 
     @Override
-    public void updateUsuario(Usuario usuario) {
+    public void atualizarUsuario(Usuario usuario) {
         String sql = "UPDATE Usuario SET nomeUsuario = ?, senha = ? WHERE usuarioId = ?";
 
         try (Connection conexao = Conexao.getConexao(); PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -63,7 +61,6 @@ public class UsuarioDAO implements IUsuario{
             stmt.setInt(3, usuario.getId());
             stmt.executeUpdate();
         }
-
         catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -78,7 +75,6 @@ public class UsuarioDAO implements IUsuario{
             stmt.setInt(1, usuario.getId());
             stmt.executeUpdate();
         }
-
         catch (SQLException e) {
             throw new RuntimeException(e);
         }

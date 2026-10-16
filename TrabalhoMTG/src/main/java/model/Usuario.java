@@ -15,8 +15,8 @@ public class Usuario {
         return id;
     }
 
-    public void setId(int id1) {
-        id = id1;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -31,8 +31,8 @@ public class Usuario {
         return senha;
     }
 
-    public void setSenha(String senha1) {
-        senha = senha1;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
 

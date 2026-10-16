@@ -1,13 +1,17 @@
 package dao;
 
-import model.Carta;
+import model.carta.Carta;
+
+import java.sql.SQLException;
 
 public interface ICarta {
 
-    public void cadastrarCarta(Carta carta);
+    public int cadastrarCarta(Carta carta) throws SQLException;
 
-    public Carta acessarCarta(String nome);
+    public Carta acessarCarta(String nome) throws SQLException;
 
-    public void deletarCarta(Carta carta);
+    public void atualizarCarta(String carta) throws SQLException;
+
+    public void deletarCarta(Carta carta) throws SQLException;
 
 }

@@ -10,7 +10,7 @@ public interface IUsuario {
 
     public Usuario acessarUsuario(String nome) throws SQLException;
 
-    public void updateUsuario(Usuario usuario) throws SQLException;
+    public void atualizarUsuario(Usuario usuario) throws SQLException;
 
     public void deletarUsuario(Usuario usuario) throws SQLException;
 
