@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="620.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroCartaController">
+    <center>
+        <VBox spacing="12.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
+            </padding>
+            <children>
+                <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Dados da carta" />
+
+                <Label text="Nome" />
+                  <TextField fx:id="txtNome" promptText="Ex.: Elfos de Llanowar" />
+
+                <HBox spacing="10.0">
+                    <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Tipo (escolha ao menos um)" />
+                                <ListView fx:id="lvTipo" prefHeight="90.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Supertipo (opcional)" />
+                                <ListView fx:id="lvSupertipo" prefHeight="90.0" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox spacing="10.0">
+                    <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Subtipo (opcional)" />
+                                <ListView fx:id="lvSubtipo" prefHeight="90.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Cor (opcional)" />
+                                <ListView fx:id="lvCor" prefHeight="90.0" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox spacing="10.0">
+                    <children>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Resistência" />
+                                <TextField fx:id="txtResistencia" promptText="Ex.: 2" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Dano" />
+                                <TextField fx:id="txtDano" promptText="Ex.: 3" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                    <padding>
+                        <Insets top="12.0" />
+                    </padding>
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#btnNovoOnAction" text="Novo" />
+                        <Button mnemonicParsing="false" onAction="#btnSalvarOnAction" text="Salvar" />
+                        <Button mnemonicParsing="false" onAction="#btnAtualizarOnAction" text="Atualizar" />
+                        <Button mnemonicParsing="false" onAction="#btnExcluirOnAction" text="Excluir" />
+                  <Label fx:id="lblMensagem" contentDisplay="CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </center>
+    <right>
+        <VBox alignment="TOP_CENTER" prefWidth="250.0" spacing="8.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="10.0" right="20.0" top="20.0" />
+            </padding>
+            <children>
+                <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Imagem" />
+                <VBox alignment="CENTER" prefHeight="293.0" prefWidth="210.0" style="-fx-border-color: #999999; -fx-background-color: #f0f0f0;">
+                    <children>
+                        <ImageView fx:id="imgCarta" fitHeight="293.0" fitWidth="210.0" pickOnBounds="true" preserveRatio="true" />
+                    </children>
+                </VBox>
+                <Button mnemonicParsing="false" onAction="#btnImagemOnAction" text="Escolher imagem..." />
+            </children>
+        </VBox>
+    </right>
+</BorderPane>
