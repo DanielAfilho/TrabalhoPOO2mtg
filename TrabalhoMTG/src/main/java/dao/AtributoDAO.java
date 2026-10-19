@@ -24,8 +24,7 @@ public class AtributoDAO implements IAtributo {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Cor cor = new Cor(rs.getInt("corId"), rs.getString("nomeCor"));
-                lista.add(cor);
+                lista.add(new Cor(rs.getInt("corId"), rs.getString("nomeCor")));
             }
         }
 
@@ -42,8 +41,7 @@ public class AtributoDAO implements IAtributo {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Tipo tipo = new Tipo(rs.getInt("tipoId"), rs.getString("nomeTipo"));
-                lista.add(tipo);
+                lista.add(new Tipo(rs.getInt("tipoId"), rs.getString("nomeTipo")));
             }
         }
 
@@ -60,8 +58,7 @@ public class AtributoDAO implements IAtributo {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Supertipo supertipo = new Supertipo(rs.getInt("supertipoId"), rs.getString("nomeSupertipo"));
-                lista.add(supertipo);
+                lista.add(new Supertipo(rs.getInt("supertipoId"), rs.getString("nomeSupertipo")));
             }
         }
 
@@ -78,8 +75,7 @@ public class AtributoDAO implements IAtributo {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Subtipo subtipo = new Subtipo(rs.getInt("subtipoId"), rs.getString("nomeSubtipo"));
-                lista.add(subtipo);
+                lista.add(new Subtipo(rs.getInt("subtipoId"), rs.getString("nomeSubtipo")));
             }
         }
 

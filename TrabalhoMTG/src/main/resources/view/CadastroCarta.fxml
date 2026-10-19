@@ -109,4 +109,11 @@
             </children>
         </VBox>
     </right>
+   <top>
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#btnVoltarOnAction" text="Voltar" BorderPane.alignment="BOTTOM_LEFT">
+         <BorderPane.margin>
+            <Insets left="10.0" top="10.0" />
+         </BorderPane.margin>
+      </Button>
+   </top>
 </BorderPane>

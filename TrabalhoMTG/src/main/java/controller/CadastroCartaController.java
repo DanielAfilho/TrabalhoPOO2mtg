@@ -13,7 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import main.GerenciadorTelas;
 import model.Carta;
+import model.Colecao;
 import model.atributos.Cor;
 import model.atributos.Subtipo;
 import model.atributos.Supertipo;
@@ -78,25 +80,15 @@ public class CadastroCartaController {
 
     }
 
-    public void setCarta(Carta carta) {
-        limparFormulario();
-        this.carta = carta;
+    @FXML
+    private void btnVoltarOnAction() {
 
-        if (carta == null) {
-            return;
+        try {
+            GerenciadorTelas.trocarTela("/view/Colecao.fxml", "Cadastro de cartas");
+        } catch(Exception e) {
+            erro("Erro na aplicação");
         }
 
-        txtNome.setText(carta.getNomeCarta());
-        txtResistencia.setText(String.valueOf(carta.getResistencia()));
-        txtDano.setText(String.valueOf(carta.getDano()));
-
-        imagemSelecionada = carta.getImagem();
-        mostrarImagem();
-
-        carta.getTipos().forEach(t -> lvTipo.getSelectionModel().select(t));
-        carta.getSupertipos().forEach(s -> lvSupertipo.getSelectionModel().select(s));
-        carta.getSubtipos().forEach(s -> lvSubtipo.getSelectionModel().select(s));
-        carta.getCores().forEach(c -> lvCor.getSelectionModel().select(c));
     }
 
     @FXML
@@ -160,7 +152,7 @@ public class CadastroCartaController {
         catch (SQLException e) {
 
             if ("23505".equals(e.getSQLState())) {
-                erro("Já existe outra carta com esse nome.");
+                erro("Este nome é usado.");
             } else {
                 erro("Erro ao atualizar a carta.");
             }
@@ -270,6 +262,27 @@ public class CadastroCartaController {
     private void sucesso(String texto) {
         lblMensagem.setStyle("-fx-text-fill: green;");
         lblMensagem.setText(texto);
+    }
+
+    public void setCarta(Carta carta) {
+        limparFormulario();
+        this.carta = carta;
+
+        if (carta == null) {
+            return;
+        }
+
+        txtNome.setText(carta.getNomeCarta());
+        txtResistencia.setText(String.valueOf(carta.getResistencia()));
+        txtDano.setText(String.valueOf(carta.getDano()));
+
+        imagemSelecionada = carta.getImagem();
+        mostrarImagem();
+
+        carta.getTipos().forEach(t -> lvTipo.getSelectionModel().select(t));
+        carta.getSupertipos().forEach(s -> lvSupertipo.getSelectionModel().select(s));
+        carta.getSubtipos().forEach(s -> lvSubtipo.getSelectionModel().select(s));
+        carta.getCores().forEach(c -> lvCor.getSelectionModel().select(c));
     }
 
 }
