@@ -21,8 +21,12 @@
                 <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Dados da carta" />
 
                 <Label text="Nome" />
-                  <TextField fx:id="txtNome" promptText="Ex.: Elfos de Llanowar" />
-
+                <HBox spacing="8.0">
+                    <children>
+                        <TextField fx:id="txtNome" promptText="Ex.: Elfos de Llanowar" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#btnBuscarOnAction" text="Buscar" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
                 <HBox spacing="10.0">
                     <children>
                         <VBox spacing="4.0" HBox.hgrow="ALWAYS">

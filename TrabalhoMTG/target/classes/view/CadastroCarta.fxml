@@ -21,8 +21,12 @@
                 <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Dados da carta" />
 
                 <Label text="Nome" />
-                  <TextField fx:id="txtNome" promptText="Ex.: Elfos de Llanowar" />
-
+                <HBox spacing="8.0">
+                    <children>
+                        <TextField fx:id="txtNome" promptText="Ex.: Elfos de Llanowar" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#btnBuscarOnAction" text="Buscar" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
                 <HBox spacing="10.0">
                     <children>
                         <VBox spacing="4.0" HBox.hgrow="ALWAYS">
@@ -109,4 +113,11 @@
             </children>
         </VBox>
     </right>
+   <top>
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#btnVoltarOnAction" text="Voltar" BorderPane.alignment="BOTTOM_LEFT">
+         <BorderPane.margin>
+            <Insets left="10.0" top="10.0" />
+         </BorderPane.margin>
+      </Button>
+   </top>
 </BorderPane>

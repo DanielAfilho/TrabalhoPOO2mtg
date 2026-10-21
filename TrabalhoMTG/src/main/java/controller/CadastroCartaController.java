@@ -80,124 +80,6 @@ public class CadastroCartaController {
 
     }
 
-    @FXML
-    private void btnVoltarOnAction() {
-
-        try {
-            GerenciadorTelas.trocarTela("/view/Colecao.fxml", "Cadastro de cartas");
-        } catch(Exception e) {
-            erro("Erro na aplicação");
-        }
-
-    }
-
-    @FXML
-    private void btnNovoOnAction() {
-        limparFormulario();
-        lblMensagem.setText("");
-    }
-
-    @FXML
-    private void btnSalvarOnAction() {
-        if (carta != null) {
-            erro("Carta já existe.");
-            return;
-        }
-
-        String problema = validarFormulario();
-        if (problema != null) {
-            erro(problema);
-            return;
-        }
-
-        lerFormulario();
-
-        try {
-            carta.setId(cartaDAO.cadastrarCarta(carta));
-            sucesso("Carta cadastrada!");
-        }
-        catch (SQLException e) {
-            carta = null;
-
-            if ("23505".equals(e.getSQLState())) {
-                erro("Essa carta já está cadastrada.");
-            } else {
-                erro("Erro ao salvar a carta.");
-            }
-
-        }
-
-    }
-
-    @FXML
-    private void btnAtualizarOnAction() {
-
-        if (carta == null) {
-            erro("Carta não existe.");
-            return;
-        }
-
-        String problema = validarFormulario();
-        if (problema != null) {
-            erro(problema);
-            return;
-        }
-
-        lerFormulario();
-
-        try {
-            cartaDAO.atualizarCarta(carta);
-            sucesso("Carta atualizada!");
-        }
-        catch (SQLException e) {
-
-            if ("23505".equals(e.getSQLState())) {
-                erro("Este nome é usado.");
-            } else {
-                erro("Erro ao atualizar a carta.");
-            }
-
-        }
-
-    }
-
-    @FXML
-    private void btnExcluirOnAction() {
-
-        if (carta == null) {
-            erro("Busque uma carta antes de excluir.");
-            return;
-        }
-
-        try {
-            cartaDAO.deletarCarta(carta);
-            limparFormulario();
-            sucesso("Carta excluída!");
-        } catch (SQLException e) {
-            erro("Erro ao excluir a carta.");
-        }
-
-    }
-
-    @FXML
-    private void btnImagemOnAction() {
-        FileChooser escolhedor = new FileChooser();
-        escolhedor.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagens", "*.png", "*.jpg", "*.jpeg"));
-
-        File arquivo = escolhedor.showOpenDialog(imgCarta.getScene().getWindow());
-        if (arquivo == null) {
-            return;
-        }
-
-        try {
-            imagemSelecionada = Files.readAllBytes(arquivo.toPath());
-            mostrarImagem();
-        } catch (IOException e) {
-            erro("Não foi possível ler a imagem.");
-        }
-
-    }
-
     private String validarFormulario() {
         if (txtNome.getText().isBlank() || txtResistencia.getText().isBlank() || txtDano.getText().isBlank() || imagemSelecionada == null || lvTipo.getSelectionModel().isEmpty()) {
             return "Campo vazio.";
@@ -233,7 +115,7 @@ public class CadastroCartaController {
         carta.setCores(new ArrayList<>(lvCor.getSelectionModel().getSelectedItems()));
     }
 
-    private void limparFormulario() {
+    protected void limparFormulario() {
         carta = null;
         imagemSelecionada = null;
         txtNome.clear();
@@ -283,6 +165,143 @@ public class CadastroCartaController {
         carta.getSupertipos().forEach(s -> lvSupertipo.getSelectionModel().select(s));
         carta.getSubtipos().forEach(s -> lvSubtipo.getSelectionModel().select(s));
         carta.getCores().forEach(c -> lvCor.getSelectionModel().select(c));
+    }
+
+    @FXML
+    private void btnExcluirOnAction() {
+
+        if (carta == null) {
+            erro("Busque uma carta antes de excluir.");
+            return;
+        }
+
+        try {
+            cartaDAO.deletarCarta(carta);
+            limparFormulario();
+            sucesso("Carta excluída!");
+        } catch (SQLException e) {
+            erro("Erro ao excluir a carta.");
+        }
+
+    }
+
+    @FXML
+    private void btnBuscarOnAction() {
+        if (carta == null) {
+            erro("Você precisa buscar por um nome de carta.");
+            return;
+        }
+        String nome = txtNome.getText().trim();
+        try {
+            Carta encontrada = cartaDAO.acessarCarta(nome);
+            if (encontrada == null) {
+                erro("Carta não encontrada!");
+                return;
+            }
+
+            setCarta(encontrada);
+        } catch (SQLException e) {
+            erro("Erro ao buscar a carta.");
+        }
+    }
+    @FXML
+    private void btnImagemOnAction() {
+        FileChooser escolhedor = new FileChooser();
+        escolhedor.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagens", "*.png", "*.jpg", "*.jpeg"));
+
+        File arquivo = escolhedor.showOpenDialog(imgCarta.getScene().getWindow());
+        if (arquivo == null) {
+            return;
+        }
+
+        try {
+            imagemSelecionada = Files.readAllBytes(arquivo.toPath());
+            mostrarImagem();
+        } catch (IOException e) {
+            erro("Não foi possível ler a imagem.");
+        }
+
+    }
+
+    @FXML
+    private void btnAtualizarOnAction() {
+
+        if (carta == null) {
+            erro("Carta não existe.");
+            return;
+        }
+
+        String problema = validarFormulario();
+        if (problema != null) {
+            erro(problema);
+            return;
+        }
+
+        lerFormulario();
+
+        try {
+            cartaDAO.atualizarCarta(carta);
+            sucesso("Carta atualizada!");
+        }
+        catch (SQLException e) {
+
+            if ("23505".equals(e.getSQLState())) {
+                erro("Este nome é usado.");
+            } else {
+                erro("Erro ao atualizar a carta.");
+            }
+
+        }
+
+    }
+
+    @FXML
+    private void btnVoltarOnAction() {
+
+        try {
+            GerenciadorTelas.trocarTela("/view/Colecao.fxml", "Cadastro de cartas");
+        } catch(Exception e) {
+            erro("Erro na aplicação");
+        }
+
+    }
+
+    @FXML
+    private void btnNovoOnAction() {
+        limparFormulario();
+        lblMensagem.setText("");
+    }
+
+    @FXML
+    private void btnSalvarOnAction() {
+        if (carta != null) {
+            erro("Carta já existe.");
+            return;
+        }
+
+        String problema = validarFormulario();
+        if (problema != null) {
+            erro(problema);
+            return;
+        }
+
+        lerFormulario();
+
+        try {
+            carta.setId(cartaDAO.cadastrarCarta(carta));
+            sucesso("Carta cadastrada!");
+        }
+        catch (SQLException e) {
+            carta = null;
+
+            if ("23505".equals(e.getSQLState())) {
+                erro("Essa carta já está cadastrada.");
+            } else {
+                erro("Erro ao salvar a carta.");
+            }
+
+        }
+
     }
 
 }

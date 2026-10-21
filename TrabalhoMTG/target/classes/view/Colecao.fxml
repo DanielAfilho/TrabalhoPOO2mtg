@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="680.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ColecaoController">
+
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #eeeeee;">
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
+         <children>
+            <Label fx:id="lblUsuario" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Coleção" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#btnCadastrarCartaOnAction" text="Cadastrar carta" />
+            <Button mnemonicParsing="false" onAction="#btnEditarUsuarioOnAction" text="Usuários" />
+            <Button mnemonicParsing="false" onAction="#btnSairOnAction" text="Sair" />
+         </children>
+      </HBox>
+   </top>
+
+   <left>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="250.0" BorderPane.alignment="CENTER">
+         <content>
+            <VBox spacing="6.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
+               </padding>
+               <children>
+                  <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Filtros" />
+
+                  <Label text="Nome" />
+                  <TextField fx:id="txtNome" promptText="Buscar pelo nome" />
+
+                  <Label text="Tipo" />
+                  <ListView fx:id="lvTipo" prefHeight="90.0" />
+
+                  <Label text="Supertipo" />
+                  <ListView fx:id="lvSupertipo" prefHeight="90.0" />
+
+                  <Label text="Subtipo" />
+                  <ListView fx:id="lvSubtipo" prefHeight="90.0" />
+
+                  <Label text="Cor" />
+                  <ListView fx:id="lvCor" prefHeight="90.0" />
+
+                  <HBox spacing="10.0">
+                     <children>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Resistência" />
+                              <TextField fx:id="txtResistencia" />
+                           </children>
+                        </VBox>
+                        <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="Dano" />
+                              <TextField fx:id="txtDano" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+
+                  <HBox spacing="8.0">
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                     <children>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnFiltrarOnAction" text="Filtrar" HBox.hgrow="ALWAYS" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnLimparFiltrosOnAction" text="Limpar" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+
+                  <Label fx:id="lblMensagem" wrapText="true" />
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </left>
+
+   <center>
+      <VBox spacing="8.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" left="10.0" right="20.0" top="20.0" />
+         </padding>
+         <children>
+            <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Minhas cartas (clique para remover)" />
+            <ScrollPane fitToWidth="true" minHeight="200.0" prefHeight="250.0" VBox.vgrow="ALWAYS">               <content>
+                  <FlowPane fx:id="flowMinhasCartas" hgap="10.0" vgap="10.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </FlowPane>
+               </content>
+            </ScrollPane>
+
+            <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Disponíveis (clique para adquirir)">
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </Label>
+            <ScrollPane fitToWidth="true" minHeight="200.0" prefHeight="250.0" VBox.vgrow="ALWAYS">               <content>
+                  <FlowPane fx:id="flowDisponiveis" hgap="10.0" vgap="10.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </FlowPane>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class consultaDAO implements IConsulta {
-    private String sql = "" ;
+    private String sql = " " ;
 
     @Override
     public List<Carta> consultaFalta(Usuario usuario) throws SQLException {
-        sql = "" +
+        sql = " " +
                  " SELECT c.cartaId, c.Imagem FROM Carta c "  +
                  sql +
                  " EXCEPT " +

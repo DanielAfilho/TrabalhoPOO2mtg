@@ -13,7 +13,6 @@ import java.sql.SQLException;
 
 public class LoginController {
     UsuarioDAO usuarioDAO = new UsuarioDAO();
-    Usuario usuario = new Usuario();
 
     @FXML
     private TextField txfNome;
@@ -26,6 +25,7 @@ public class LoginController {
 
     @FXML
     public void btnAcessarOnAction() {
+
         String nome = txfNome.getText().trim();
         String senha = psfSenha.getText();
 
@@ -34,10 +34,10 @@ public class LoginController {
             return;
         }
 
+        Usuario usuario;
         try {
             usuario = usuarioDAO.acessarUsuario(nome);
-        }
-        catch(SQLException  e) {
+        } catch (SQLException e) {
             erro("Erro no sistema: tente novamente mais tarde!");
             return;
         }
@@ -51,7 +51,7 @@ public class LoginController {
 
                 try {
                     GerenciadorTelas.setUsuarioLogado(usuario);
-                    GerenciadorTelas.trocarTela("/view/CadastroCarta.fxml", "Cadastro de cartas");
+                    GerenciadorTelas.trocarTela("/view/Colecao.fxml", "Coleção");
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -77,6 +77,7 @@ public class LoginController {
             return;
         }
 
+        Usuario usuario = new Usuario();
         usuario.setNomeUsuario(nome);
         usuario.setSenha(senha);
 
@@ -87,7 +88,7 @@ public class LoginController {
         catch(SQLException e) {
 
             if ("23505".equals(e.getSQLState())) {
-                erro("Esse usuario já está cadastrada.");
+                erro("Esse usuario já está cadastrado.");
             } else {
                 erro("Erro no sistema.");
             }

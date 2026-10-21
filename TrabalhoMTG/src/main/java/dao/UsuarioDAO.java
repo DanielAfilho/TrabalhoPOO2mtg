@@ -3,6 +3,8 @@ package dao;
 import model.Usuario;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioDAO implements IUsuario{
 
@@ -66,6 +68,23 @@ public class UsuarioDAO implements IUsuario{
             stmt.executeUpdate();
         }
 
+    }
+
+    @Override
+    public List<Usuario> listarUsuarios() throws SQLException {
+        String sql = "SELECT usuarioId, nomeUsuario, senha FROM Usuario ORDER BY nomeUsuario";
+        List<Usuario> lista = new ArrayList<>();
+
+        try (Connection conexao = Conexao.getConexao();
+             PreparedStatement stmt = conexao.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(new Usuario(rs.getInt("usuarioId"), rs.getString("nomeUsuario"), rs.getString("senha")));
+            }
+        }
+
+        return lista;
     }
 
 }
