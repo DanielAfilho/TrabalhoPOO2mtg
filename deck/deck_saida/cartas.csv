@@ -1,0 +1,80 @@
+nome;tipo;supertipo;subtipo;cores;dano;resistencia
+Amphibian Downpour;Encantamento;;Aura;Azul;0;0
+Aqueous Form;Encantamento;;Aura;Azul;0;0
+Arcane Adaptation;Encantamento;;;Azul;0;0
+Arcane Signet;Artefato;;;Incolor;0;0
+Archetype of Imagination;Encantamento,Criatura;;Human,Wizard;Azul;3;2
+Attuned Hunter;Criatura;;Human,Ranger;Verde;3;3
+Augmenter Pugilist // Echoing Equation;Criatura;;Troll,Druid;Incolor;0;0
+Ballad of the Black Flag;Encantamento;;Saga;Azul;0;0
+Berta, Wise Extrapolator;Criatura;Lendário;Frog,Druid;Verde,Azul;1;4
+Bramble Familiar // Fetch Quest;Criatura;;Elemental,Raccoon;Verde;2;2
+Chalk Outline;Encantamento;;;Verde;0;0
+Chronic Flooding;Encantamento;;Aura;Azul;0;0
+Clement, the Worrywort;Criatura;Lendário;Frog,Druid;Verde,Azul;3;3
+Codex Shredder;Artefato;;;Incolor;0;0
+Colossal Badger // Dig Deep;Criatura;;Badger;Verde;6;5
+Command Tower;Terreno;;;Incolor;0;0
+Deranged Assistant;Criatura;;Human,Wizard;Azul;1;1
+Desecrated Tomb;Artefato;;;Incolor;0;0
+Doc Aurlock, Grizzled Genius;Criatura;Lendário;Bear,Druid;Verde,Azul;2;3
+Dreamdew Entrancer;Criatura;;Frog,Wizard;Verde,Azul;3;4
+Dredger's Insight;Encantamento;;;Verde;0;0
+Eaten by Piranhas;Encantamento;;Aura;Azul;0;0
+Eternal Witness;Criatura;;Human,Shaman;Verde;2;1
+Exotic Orchard;Terreno;;;Incolor;0;0
+Fertile Ground;Encantamento;;Aura;Verde;0;0
+Fleet Swallower;Criatura;;Fish;Azul;6;6
+Forest;Terreno;Básico;Forest;Incolor;0;0
+Fraying Sanity;Encantamento;;Aura,Curse;Azul;0;0
+Frog Butler;Criatura;;Frog,Spirit;Verde;1;1
+Galloping Lizrog;Criatura;;Frog,Lizard;Verde,Azul;3;3
+Gossip's Talent;Encantamento;;Class;Azul;0;0
+Greenhouse Propagator;Criatura;;Cat,Druid;Verde;2;3
+Hedge Shredder;Artefato;;Vehicle;Verde;5;5
+Hedron Crab;Criatura;;Crab;Azul;0;2
+Imprisoned in the Moon;Encantamento;;Aura;Azul;0;0
+Island;Terreno;Básico;Island;Incolor;0;0
+Jade Avenger;Criatura;;Frog,Samurai;Verde;2;2
+Laboratory Maniac;Criatura;;Human,Wizard;Azul;2;2
+Lasyd Prowler;Criatura;;Snake,Ranger;Verde;5;5
+Lilypad Village;Terreno;;;Incolor;0;0
+Llanowar Elves;Criatura;;Elf,Druid;Verde;1;1
+Long River Lurker;Criatura;;Frog,Scout;Azul;2;3
+Masked Vandal;Criatura;;Shapeshifter;Verde;1;3
+Maskwood Nexus;Artefato;;;Incolor;0;0
+Millikin;Artefato,Criatura;;Construct;Incolor;0;1
+Murkfiend Liege;Criatura;;Horror;Verde,Azul;4;4
+Myriad Landscape;Terreno;;;Incolor;0;0
+Overflowing Basin;Terreno;;;Incolor;0;0
+Path of Ancestry;Terreno;;;Incolor;0;0
+Perpetual Timepiece;Artefato;;;Incolor;0;0
+Plaxcaster Frogling;Criatura;;Frog,Mutant;Verde,Azul;0;0
+Rampant Frogantua;Criatura;;Frog;Verde;3;3
+Rogue's Passage;Terreno;;;Incolor;0;0
+Sakura-Tribe Elder;Criatura;;Snake,Shaman;Verde;1;1
+Satyr Wayfinder;Criatura;;Satyr;Verde;1;1
+Seal of Primordium;Encantamento;;;Verde;0;0
+Shadow Kin;Criatura;;Shapeshifter;Azul;2;2
+Shigeki, Jukai Visionary;Encantamento,Criatura;Lendário;Snake,Druid;Verde;1;3
+Simic Growth Chamber;Terreno;;;Incolor;0;0
+Simic Signet;Artefato;;;Incolor;0;0
+Siren Stormtamer;Criatura;;Siren,Pirate,Wizard;Azul;1;1
+Skola Grovedancer;Encantamento,Criatura;;Satyr,Druid;Verde;2;2
+Slogurk, the Overslime;Criatura;Lendário;Ooze;Verde,Azul;3;3
+Sol Ring;Artefato;;;Incolor;0;0
+Spore Frog;Criatura;;Frog;Verde;1;1
+Stillness in Motion;Encantamento;;;Azul;0;0
+Swiftfoot Boots;Artefato;;Equipment;Incolor;0;0
+Talisman of Curiosity;Artefato;;;Incolor;0;0
+Tamiyo, Collector of Tales;Planeswalker;Lendário;Tamiyo;Verde,Azul;0;0
+Temple of Mystery;Terreno;;;Incolor;0;0
+Textbook Tabulator;Criatura;;Frog,Wizard;Azul;0;3
+The Thirteenth Doctor;Criatura;Lendário;Time Lord,Doctor;Verde,Azul;2;2
+Treeguard Duo;Criatura;;Frog,Rabbit;Verde;3;4
+Valley Mightcaller;Criatura;;Frog,Warrior;Verde;1;1
+Vineglimmer Snarl;Terreno;;;Incolor;0;0
+Wild Growth;Encantamento;;Aura;Verde;0;0
+Willow Geist;Criatura;;Treefolk,Spirit;Verde;1;1
+Witness Protection;Encantamento;;Aura;Azul;0;0
+Grolnok, the Omnivore;Criatura;Lendário;Frog;Verde,Azul;3;3
