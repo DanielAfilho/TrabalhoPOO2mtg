@@ -87,13 +87,13 @@
                         <Button mnemonicParsing="false" onAction="#btnSalvarOnAction" text="Salvar" />
                         <Button mnemonicParsing="false" onAction="#btnAtualizarOnAction" text="Atualizar" />
                         <Button mnemonicParsing="false" onAction="#btnExcluirOnAction" text="Excluir" />
-                  <Label fx:id="lblMensagem" contentDisplay="CENTER">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
                     </children>
                 </HBox>
+            <Label fx:id="lblMensagem" contentDisplay="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
             </children>
         </VBox>
     </center>

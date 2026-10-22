@@ -187,11 +187,13 @@ public class CadastroCartaController {
 
     @FXML
     private void btnBuscarOnAction() {
-        if (carta == null) {
+        String nome = txtNome.getText().trim();
+
+        if (nome == null) {
             erro("Você precisa buscar por um nome de carta.");
             return;
         }
-        String nome = txtNome.getText().trim();
+
         try {
             Carta encontrada = cartaDAO.acessarCarta(nome);
             if (encontrada == null) {
@@ -204,6 +206,7 @@ public class CadastroCartaController {
             erro("Erro ao buscar a carta.");
         }
     }
+
     @FXML
     private void btnImagemOnAction() {
         FileChooser escolhedor = new FileChooser();

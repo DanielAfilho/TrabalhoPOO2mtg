@@ -84,6 +84,7 @@ public class ColecaoController {
             area.getChildren().add(criarImagem(carta, aoClicar));
         }
     }
+
     private void adquirir(Carta carta) {
         try {
             colecaoDAO.adicionarCarta(usuarioLogado.getId(), carta.getId());
@@ -104,7 +105,7 @@ public class ColecaoController {
 
     private void carregarCartas() {
         try {
-            IConsulta consulta = new consultaDAO();
+            IConsulta consulta = new ConsultaDAO();
 
             aplicarFiltros(consulta);
             List<Carta> minhas = consulta.consultaTem(usuarioLogado);
@@ -156,6 +157,7 @@ public class ColecaoController {
         lblMensagem.setText("");
         carregarCartas();
     }
+
     @FXML
     private void btnLimparFiltrosOnAction() {
         txtNome.clear();
@@ -168,6 +170,7 @@ public class ColecaoController {
         lblMensagem.setText("");
         carregarCartas();
     }
+
     @FXML
     private void btnCadastrarCartaOnAction() {
         try {
@@ -191,6 +194,7 @@ public class ColecaoController {
         lblMensagem.setStyle("-fx-text-fill: red;");
         lblMensagem.setText(texto);
     }
+
     @FXML private void btnEditarUsuarioOnAction() {
         try {
             GerenciadorTelas.trocarTela("/view/EditarUsuario.fxml", "Editor de usuários");
