@@ -1,9 +1,5 @@
 package controller;
 
-import dao.AtributoDAO;
-import dao.CartaDAO;
-import dao.IAtributo;
-import dao.ICarta;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -15,17 +11,19 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import main.GerenciadorTelas;
 import model.Carta;
-import model.Colecao;
 import model.atributos.Cor;
 import model.atributos.Subtipo;
 import model.atributos.Supertipo;
 import model.atributos.Tipo;
+import service.AtributoService;
+import service.CartaService;
+import service.CatalogoAtributos;
+import service.ServicoException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CadastroCartaController {
@@ -56,8 +54,9 @@ public class CadastroCartaController {
     @FXML
     private Label lblMensagem;
 
-    private final ICarta cartaDAO = new CartaDAO();
-    private final IAtributo atributoDAO = new AtributoDAO();
+    // SERVICE LAYER: o controller não conhece mais os DAOs
+    private final CartaService cartaService = new CartaService();
+    private final AtributoService atributoService = new AtributoService();
     private Carta carta;
     private byte[] imagemSelecionada;
 
@@ -69,36 +68,35 @@ public class CadastroCartaController {
         lvCor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         try {
-            lvTipo.setItems(FXCollections.observableArrayList(atributoDAO.listarTipos()));
-            lvSupertipo.setItems(FXCollections.observableArrayList(atributoDAO.listarSupertipos()));
-            lvSubtipo.setItems(FXCollections.observableArrayList(atributoDAO.listarSubtipos()));
-            lvCor.setItems(FXCollections.observableArrayList(atributoDAO.listarCores()));
+            CatalogoAtributos catalogo = atributoService.carregarCatalogo();
+            lvTipo.setItems(FXCollections.observableArrayList(catalogo.tipos()));
+            lvSupertipo.setItems(FXCollections.observableArrayList(catalogo.supertipos()));
+            lvSubtipo.setItems(FXCollections.observableArrayList(catalogo.subtipos()));
+            lvCor.setItems(FXCollections.observableArrayList(catalogo.cores()));
         }
-        catch (SQLException e) {
-            erro("Não foi possível carregar tipos e cores.");
+        catch (ServicoException e) {
+            erro(e.getMessage());
         }
 
     }
 
-    private String validarFormulario() {
-        if (txtNome.getText().isBlank() || txtResistencia.getText().isBlank() || txtDano.getText().isBlank() || imagemSelecionada == null || lvTipo.getSelectionModel().isEmpty()) {
-            return "Campo vazio.";
-        }
+    /**
+     * Converte o formulário em uma Carta. Só trata o que é da interface (ler números dos campos);
+     * as regras de negócio (nome, imagem, tipo obrigatório) ficam no CartaService.
+     */
+    private boolean lerFormulario() {
+        int resistencia;
+        int dano;
 
         try {
-            Integer.parseInt(txtResistencia.getText().trim());
-            Integer.parseInt(txtDano.getText().trim());
+            resistencia = Integer.parseInt(txtResistencia.getText().trim());
+            dano = Integer.parseInt(txtDano.getText().trim());
         } catch (NumberFormatException e) {
-            return "Resistência e dano devem ser números inteiros.";
+            erro("Resistência e dano devem ser números inteiros.");
+            return false;
         }
 
-        return null;
-    }
-
-    private void lerFormulario() {
         String nome = txtNome.getText().trim();
-        int resistencia = Integer.parseInt(txtResistencia.getText().trim());
-        int dano = Integer.parseInt(txtDano.getText().trim());
 
         if (carta == null) {
             carta = new Carta(0, imagemSelecionada, nome, resistencia, dano);
@@ -113,6 +111,7 @@ public class CadastroCartaController {
         carta.setSupertipos(new ArrayList<>(lvSupertipo.getSelectionModel().getSelectedItems()));
         carta.setSubtipos(new ArrayList<>(lvSubtipo.getSelectionModel().getSelectedItems()));
         carta.setCores(new ArrayList<>(lvCor.getSelectionModel().getSelectedItems()));
+        return true;
     }
 
     protected void limparFormulario() {
@@ -170,41 +169,25 @@ public class CadastroCartaController {
     @FXML
     private void btnExcluirOnAction() {
 
-        if (carta == null) {
-            erro("Busque uma carta antes de excluir.");
-            return;
-        }
-
         try {
-            cartaDAO.deletarCarta(carta);
+            cartaService.excluir(carta);
             limparFormulario();
             sucesso("Carta excluída!");
-        } catch (SQLException e) {
-            erro("Erro ao excluir a carta.");
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
 
     }
 
     @FXML
     private void btnBuscarOnAction() {
-        String nome = txtNome.getText().trim();
-
-        if (nome == null) {
-            erro("Você precisa buscar por um nome de carta.");
-            return;
-        }
 
         try {
-            Carta encontrada = cartaDAO.acessarCarta(nome);
-            if (encontrada == null) {
-                erro("Carta não encontrada!");
-                return;
-            }
-
-            setCarta(encontrada);
-        } catch (SQLException e) {
-            erro("Erro ao buscar a carta.");
+            setCarta(cartaService.buscarPorNome(txtNome.getText()));
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
+
     }
 
     @FXML
@@ -234,26 +217,16 @@ public class CadastroCartaController {
             return;
         }
 
-        String problema = validarFormulario();
-        if (problema != null) {
-            erro(problema);
+        if (!lerFormulario()) {
             return;
         }
 
-        lerFormulario();
-
         try {
-            cartaDAO.atualizarCarta(carta);
+            cartaService.atualizar(carta);
             sucesso("Carta atualizada!");
         }
-        catch (SQLException e) {
-
-            if ("23505".equals(e.getSQLState())) {
-                erro("Este nome é usado.");
-            } else {
-                erro("Erro ao atualizar a carta.");
-            }
-
+        catch (ServicoException e) {
+            erro(e.getMessage());
         }
 
     }
@@ -282,27 +255,18 @@ public class CadastroCartaController {
             return;
         }
 
-        String problema = validarFormulario();
-        if (problema != null) {
-            erro(problema);
+        if (!lerFormulario()) {
+            carta = null;
             return;
         }
 
-        lerFormulario();
-
         try {
-            carta.setId(cartaDAO.cadastrarCarta(carta));
+            cartaService.cadastrar(carta);
             sucesso("Carta cadastrada!");
         }
-        catch (SQLException e) {
+        catch (ServicoException e) {
             carta = null;
-
-            if ("23505".equals(e.getSQLState())) {
-                erro("Essa carta já está cadastrada.");
-            } else {
-                erro("Erro ao salvar a carta.");
-            }
-
+            erro(e.getMessage());
         }
 
     }

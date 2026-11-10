@@ -2,13 +2,17 @@ package model;
 
 import java.util.List;
 
+/**
+ * Resultado da consulta da tela de Coleção: as cartas que o usuário possui
+ * e as que ainda estão disponíveis para ele adquirir (ambas já filtradas).
+ */
 public class Colecao {
     private List<Carta> cartasUsuario;
-    private List<Carta> cartasTotais;
+    private List<Carta> cartasDisponiveis;
 
-    public Colecao(List<Carta> cartasUsuario, List<Carta> cartasTotais) {
+    public Colecao(List<Carta> cartasUsuario, List<Carta> cartasDisponiveis) {
         this.cartasUsuario = cartasUsuario;
-        this.cartasTotais = cartasTotais;
+        this.cartasDisponiveis = cartasDisponiveis;
     }
 
     public List<Carta> getCartasUsuario() {
@@ -19,12 +23,12 @@ public class Colecao {
         this.cartasUsuario = cartasUsuario;
     }
 
-    public List<Carta> getCartasTotais() {
-        return cartasTotais;
+    public List<Carta> getCartasDisponiveis() {
+        return cartasDisponiveis;
     }
 
-    public void setCartasTotais(List<Carta> cartasTotais) {
-        this.cartasTotais = cartasTotais;
+    public void setCartasDisponiveis(List<Carta> cartasDisponiveis) {
+        this.cartasDisponiveis = cartasDisponiveis;
     }
 
 }

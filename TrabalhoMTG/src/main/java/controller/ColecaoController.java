@@ -1,25 +1,30 @@
 package controller;
 
-import dao.*;
 import javafx.collections.FXCollections;
-import javafx.scene.Cursor;
-import javafx.scene.control.SelectionMode;
-import main.GerenciadorTelas;
-import model.Carta;
-import model.Usuario;
-import model.atributos.*;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import java.io.ByteArrayInputStream;
-
+import javafx.scene.layout.FlowPane;
+import main.GerenciadorTelas;
+import model.Carta;
+import model.Colecao;
+import model.FiltroCartas;
+import model.Usuario;
+import model.atributos.Cor;
+import model.atributos.Subtipo;
+import model.atributos.Supertipo;
 import model.atributos.Tipo;
+import service.AtributoService;
+import service.CatalogoAtributos;
+import service.ColecaoService;
+import service.ServicoException;
 
-import java.sql.SQLException;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -41,8 +46,9 @@ public class ColecaoController {
     @FXML private FlowPane flowMinhasCartas;
     @FXML private FlowPane flowDisponiveis;
 
-    private final IAtributo atributoDAO = new AtributoDAO();
-    private final IColecao colecaoDAO = new ColecaoDAO();
+    // SERVICE LAYER: o controller não conhece mais os DAOs
+    private final AtributoService atributoService = new AtributoService();
+    private final ColecaoService colecaoService = new ColecaoService();
     private Usuario usuarioLogado;
 
     @FXML
@@ -56,13 +62,13 @@ public class ColecaoController {
         lvCor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         try {
-            lvTipo.setItems(FXCollections.observableArrayList(atributoDAO.listarTipos()));
-            lvSupertipo.setItems(FXCollections.observableArrayList(atributoDAO.listarSupertipos()));
-            lvSubtipo.setItems(FXCollections.observableArrayList(atributoDAO.listarSubtipos()));
-            lvCor.setItems(FXCollections.observableArrayList(atributoDAO.listarCores()));
-        } catch (SQLException e) {
-            lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Não foi possível carregar os filtros.");
+            CatalogoAtributos catalogo = atributoService.carregarCatalogo();
+            lvTipo.setItems(FXCollections.observableArrayList(catalogo.tipos()));
+            lvSupertipo.setItems(FXCollections.observableArrayList(catalogo.supertipos()));
+            lvSubtipo.setItems(FXCollections.observableArrayList(catalogo.subtipos()));
+            lvCor.setItems(FXCollections.observableArrayList(catalogo.cores()));
+        } catch (ServicoException e) {
+            erro("Não foi possível carregar os filtros.");
         }
 
         carregarCartas();
@@ -87,59 +93,52 @@ public class ColecaoController {
 
     private void adquirir(Carta carta) {
         try {
-            colecaoDAO.adicionarCarta(usuarioLogado.getId(), carta.getId());
+            colecaoService.adquirir(usuarioLogado, carta);
             carregarCartas();
-        } catch (SQLException e) {
-            erro("Não foi possível adquirir a carta.");
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
     }
 
     private void remover(Carta carta) {
         try {
-            colecaoDAO.removerCarta(usuarioLogado.getId(), carta.getId());
+            colecaoService.remover(usuarioLogado, carta);
             carregarCartas();
-        } catch (SQLException e) {
-            erro("Não foi possível remover a carta.");
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
     }
 
     private void carregarCartas() {
         try {
-            IConsulta consulta = new ConsultaDAO();
+            Colecao colecao = colecaoService.carregar(usuarioLogado, montarFiltro());
 
-            aplicarFiltros(consulta);
-            List<Carta> minhas = consulta.consultaTem(usuarioLogado);
-
-            aplicarFiltros(consulta);
-            List<Carta> disponiveis = consulta.consultaFalta(usuarioLogado);
-
-            preencher(flowMinhasCartas, minhas, this::remover);
-            preencher(flowDisponiveis, disponiveis, this::adquirir);
-        } catch (SQLException e) {
-            lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Não foi possível carregar as cartas.");
+            preencher(flowMinhasCartas, colecao.getCartasUsuario(), this::remover);
+            preencher(flowDisponiveis, colecao.getCartasDisponiveis(), this::adquirir);
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
     }
 
-    private void aplicarFiltros(IConsulta consulta) {
-        String nome = txtNome.getText().trim();
-        if (!nome.isEmpty()) {
-            consulta.consultaNome(nome);
-        }
+    /** PADRÃO BUILDER: monta o filtro só com o que o usuário preencheu na tela. */
+    private FiltroCartas montarFiltro() {
+        return FiltroCartas.builder()
+                .nome(txtNome.getText())
+                .tipos(new ArrayList<>(lvTipo.getSelectionModel().getSelectedItems()))
+                .supertipos(new ArrayList<>(lvSupertipo.getSelectionModel().getSelectedItems()))
+                .subtipos(new ArrayList<>(lvSubtipo.getSelectionModel().getSelectedItems()))
+                .cores(new ArrayList<>(lvCor.getSelectionModel().getSelectedItems()))
+                .resistencia(lerInteiro(txtResistencia))
+                .dano(lerInteiro(txtDano))
+                .build();
+    }
 
-        consulta.consultaTipo(new ArrayList<>(lvTipo.getSelectionModel().getSelectedItems()));
-        consulta.consultaSupertipo(new ArrayList<>(lvSupertipo.getSelectionModel().getSelectedItems()));
-        consulta.consultaSubtipo(new ArrayList<>(lvSubtipo.getSelectionModel().getSelectedItems()));
-        consulta.consultaCor(new ArrayList<>(lvCor.getSelectionModel().getSelectedItems()));
-
-        String resistencia = txtResistencia.getText().trim();
-        if (!resistencia.isEmpty()) {
-            consulta.consultaResistencia(Integer.parseInt(resistencia));
-        }
-
-        String dano = txtDano.getText().trim();
-        if (!dano.isEmpty()) {
-            consulta.consultaDano(Integer.parseInt(dano));
+    /** @return o número digitado, ou null se o campo estiver vazio ou inválido */
+    private Integer lerInteiro(TextField campo) {
+        try {
+            return Integer.valueOf(campo.getText().trim());
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
@@ -149,8 +148,7 @@ public class ColecaoController {
             if (!txtResistencia.getText().isBlank()) Integer.parseInt(txtResistencia.getText().trim());
             if (!txtDano.getText().isBlank()) Integer.parseInt(txtDano.getText().trim());
         } catch (NumberFormatException e) {
-            lblMensagem.setStyle("-fx-text-fill: red;");
-            lblMensagem.setText("Resistência e dano devem ser números inteiros.");
+            erro("Resistência e dano devem ser números inteiros.");
             return;
         }
 
@@ -169,6 +167,19 @@ public class ColecaoController {
         lvCor.getSelectionModel().clearSelection();
         lblMensagem.setText("");
         carregarCartas();
+    }
+
+    /** PADRÃO COMMAND: desfaz a última aquisição ou remoção de carta. */
+    @FXML
+    private void btnDesfazerOnAction() {
+        try {
+            String desfeito = colecaoService.desfazer();
+            carregarCartas();
+            lblMensagem.setStyle("-fx-text-fill: green;");
+            lblMensagem.setText("Desfeito: " + desfeito + ".");
+        } catch (ServicoException e) {
+            erro(e.getMessage());
+        }
     }
 
     @FXML
@@ -202,11 +213,5 @@ public class ColecaoController {
             erro("Não foi possível abrir o gerenciador de usuários");
         }
     }
-
-
-
-
-
-
 
 }

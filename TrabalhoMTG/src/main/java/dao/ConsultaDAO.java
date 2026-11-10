@@ -1,8 +1,10 @@
 package dao;
 
+import dao.escopo.EscopoColecao;
 import model.Carta;
+import model.FiltroCartas;
 import model.Usuario;
-import model.atributos.*;
+import model.atributos.Atributo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,124 +13,72 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contexto do padrão STRATEGY (o escopo vem de fora) e consumidor do BUILDER ({@link FiltroCartas}).
+ *
+ * Antes: o DAO guardava a consulta em um atributo String mutável, concatenava valores digitados
+ * pelo usuário no SQL e dependia da ordem das chamadas. Agora: a consulta é montada e executada
+ * em um único método, sem estado, e todos os valores vão por PreparedStatement.
+ */
 public class ConsultaDAO implements IConsulta {
-    private String sql = " " ;
 
     @Override
-    public List<Carta> consultaFalta(Usuario usuario) throws SQLException {
-        sql = " " +
-                 " SELECT c.cartaId, c.Imagem FROM Carta c "  +
-                 sql +
-                 " EXCEPT " +
-                 " SELECT c.cartaId, c.Imagem  "  +
-                 " FROM temCarta t JOIN Carta c ON c.cartaId = t.cartaId "  +
-                 " WHERE t.usuarioId =  "  + usuario.getId();
-        return executar();
-    }
-    
-    @Override
-    public List<Carta> consultaTem(Usuario usuario) throws SQLException {
-        sql =  "  "  +
-                 " SELECT c.cartaId, c.Imagem  "  +
-                 " FROM temCarta t JOIN Carta c ON c.cartaId = t.cartaId "  +
-                 " WHERE t.usuarioId =  "  + usuario.getId() +
-                sql;
-        return executar();
-    }
+    public List<Carta> buscar(Usuario usuario, EscopoColecao escopo, FiltroCartas filtro) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT c.cartaId, c.imagem FROM Carta c WHERE ")
+                .append(escopo.condicaoSql());
+        List<Object> parametros = new ArrayList<>();
+        parametros.add(usuario.getId());
 
-    @Override
-    public void consultaTipo(List<Tipo> lista) {
-
-        for (Atributo a : lista) {
-            sql = sql +
-                     " INTERSECT "  +
-                     " SELECT c.cartaId, c.Imagem "  +
-                     " FROM temTipo t JOIN Carta c ON c.cartaId = t.cartaId "  +
-                     " WHERE t.tipoId =  "  + a.getId();
+        if (filtro.getNome() != null) {
+            sql.append(" AND c.nomeCarta ~* ?");
+            parametros.add(filtro.getNome());
         }
 
-    }
+        // a carta precisa ter TODOS os atributos selecionados (mesma semântica do INTERSECT original)
+        exigirAtributos(sql, parametros, "TemTipo", "tipoId", filtro.getTipos());
+        exigirAtributos(sql, parametros, "TemSupertipo", "supertipoId", filtro.getSupertipos());
+        exigirAtributos(sql, parametros, "TemSubtipo", "subtipoId", filtro.getSubtipos());
+        exigirAtributos(sql, parametros, "TemCor", "corId", filtro.getCores());
 
-    @Override
-    public void consultaSubtipo(List<Subtipo> lista) {
-
-        for (Atributo a : lista) {
-            sql = sql +
-                     " INTERSECT "  +
-                     " SELECT c.cartaId, c.Imagem "  +
-                     " FROM temSubtipo t JOIN Carta c ON c.cartaId = t.cartaId "  +
-                     " WHERE t.subtipoId =  "  + a.getId();
+        if (filtro.getResistencia() != null) {
+            sql.append(" AND c.resistencia = ?");
+            parametros.add(filtro.getResistencia());
         }
 
-    }
-
-    @Override
-    public void consultaSupertipo(List<Supertipo> lista) {
-
-        for (Atributo a : lista) {
-            sql = sql +
-                     " INTERSECT "  +
-                     " SELECT c.cartaId, c.Imagem "  +
-                     " FROM temSupertipo t JOIN Carta c ON c.cartaId = t.cartaId "  +
-                     " WHERE t.supertipoId =  "  + a.getId();
+        if (filtro.getDano() != null) {
+            sql.append(" AND c.dano = ?");
+            parametros.add(filtro.getDano());
         }
 
-    }
+        sql.append(" ORDER BY c.nomeCarta");
 
-    @Override
-    public void consultaCor(List<Cor> lista) {
-
-        for (Atributo a : lista) {
-            sql = sql +
-                     " INTERSECT "  +
-                     " SELECT c.cartaId, c.Imagem "  +
-                     " FROM temCor t JOIN Carta c ON c.cartaId = t.cartaId "  +
-                     " WHERE t.corId =  "  + a.getId();
-        }
-
-    }
-
-    @Override
-    public void consultaDano(int valor) {
-        sql = sql +
-                 "  INTERSECT "  +
-                 " SELECT c.cartaId, c.Imagem "  +
-                 " FROM Carta c WHERE c.dano =  "  + valor;
-    }
-
-    @Override
-    public void consultaResistencia(int valor) {
-        sql = sql +
-                 "  INTERSECT  "  +
-                 "  SELECT c.cartaId, c.Imagem  "  +
-                 "  FROM Carta c WHERE c.resistencia =  "  + valor;
-    }
-
-    @Override
-    public void consultaNome(String nome) {
-        sql = sql +
-                 "  INTERSECT "  +
-                 " SELECT c.cartaId, c.Imagem "  +
-                 " FROM Carta c WHERE c.nomeCarta ~* " + "'" + nome +  "'" ;
-    }
-
-    public List<Carta> executar() throws SQLException {
         List<Carta> lista = new ArrayList<>();
 
         try (Connection conexao = Conexao.getConexao();
-             PreparedStatement stmt = conexao.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conexao.prepareStatement(sql.toString())) {
 
-            while (rs.next()) {
-                lista.add(new Carta(rs.getInt( "cartaId" ), rs.getBytes( "imagem" )));
+            for (int i = 0; i < parametros.size(); i++) {
+                stmt.setObject(i + 1, parametros.get(i));
             }
 
-        }
-        finally {
-            sql =  "";
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Carta(rs.getInt("cartaId"), rs.getBytes("imagem")));
+                }
+            }
         }
 
         return lista;
+    }
+
+    // tabela e coluna vêm sempre de constantes do código, nunca da entrada do usuário
+    private void exigirAtributos(StringBuilder sql, List<Object> parametros, String tabela, String coluna,
+                                 List<? extends Atributo> atributos) {
+        for (Atributo a : atributos) {
+            sql.append(" AND EXISTS (SELECT 1 FROM ").append(tabela)
+                    .append(" x WHERE x.cartaId = c.cartaId AND x.").append(coluna).append(" = ?)");
+            parametros.add(a.getId());
+        }
     }
 
 }

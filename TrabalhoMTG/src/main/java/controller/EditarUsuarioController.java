@@ -1,15 +1,13 @@
 package controller;
 
-import dao.IUsuario;
-import dao.UsuarioDAO;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.GerenciadorTelas;
 import model.Usuario;
-
-import java.sql.SQLException;
+import service.ServicoException;
+import service.UsuarioService;
 
 public class EditarUsuarioController {
     @FXML
@@ -21,7 +19,8 @@ public class EditarUsuarioController {
     @FXML private TableColumn<Usuario, Integer> colId;
     @FXML private TableColumn<Usuario, String> colNome;
 
-    private final IUsuario usuarioDAO = new UsuarioDAO();
+    // SERVICE LAYER: o controller não conhece mais o DAO
+    private final UsuarioService usuarioService = new UsuarioService();
     private Usuario usuarioSelecionado;
 
     @FXML
@@ -44,9 +43,9 @@ public class EditarUsuarioController {
 
     private void carregarTabela() {
         try {
-            tabela.getItems().setAll(usuarioDAO.listarUsuarios());
-        } catch (SQLException e) {
-            erro("Não foi possível carregar os usuários.");
+            tabela.getItems().setAll(usuarioService.listar());
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
     }
 
@@ -91,31 +90,16 @@ public class EditarUsuarioController {
             return;
         }
 
-        String nome = txtNome.getText().trim();
-        String senha = psfSenha.getText();
-
-        if (nome.isEmpty() || senha.isEmpty()) {
-            erro("Preencha o nome e a senha.");
-            return;
-        }
-
-        Usuario novo = new Usuario();
-        novo.setNomeUsuario(nome);
-        novo.setSenha(senha);
-
         try {
-            novo.setId(usuarioDAO.cadastrarUsuario(novo));
+            usuarioService.cadastrar(txtNome.getText(), psfSenha.getText());
             limparFormulario();
             carregarTabela();
             sucesso("Usuário cadastrado!");
-        } catch (SQLException e) {
-            if ("23505".equals(e.getSQLState())) {
-                erro("Já existe um usuário com esse nome.");
-            } else {
-                erro("Erro ao cadastrar o usuário.");
-            }
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
     }
+
     @FXML
     private void btnAtualizarOnAction() {
         if (usuarioSelecionado == null) {
@@ -123,18 +107,9 @@ public class EditarUsuarioController {
             return;
         }
 
-        String nome = txtNome.getText().trim();
-        String senha = psfSenha.getText();
-
-        if (nome.isEmpty() || senha.isEmpty()) {
-            erro("Preencha o nome e a senha.");
-            return;
-        }
-
-        Usuario atualizado = new Usuario(usuarioSelecionado.getId(), nome, senha);
-
         try {
-            usuarioDAO.atualizarUsuario(atualizado);
+            Usuario atualizado = usuarioService.atualizar(
+                    usuarioSelecionado.getId(), txtNome.getText(), psfSenha.getText());
 
             // se o usuário alterou a si mesmo, a sessão precisa do nome novo
             Usuario logado = GerenciadorTelas.getUsuarioLogado();
@@ -145,12 +120,8 @@ public class EditarUsuarioController {
             limparFormulario();
             carregarTabela();
             sucesso("Usuário atualizado!");
-        } catch (SQLException e) {
-            if ("23505".equals(e.getSQLState())) {
-                erro("Já existe um usuário com esse nome.");
-            } else {
-                erro("Erro ao atualizar o usuário.");
-            }
+        } catch (ServicoException e) {
+            erro(e.getMessage());
         }
     }
 
@@ -169,16 +140,13 @@ public class EditarUsuarioController {
             return;
         }
 
-        boolean excluiuASiMesmo = false;
         Usuario logado = GerenciadorTelas.getUsuarioLogado();
-        if (logado != null && logado.getId() == usuarioSelecionado.getId()) {
-            excluiuASiMesmo = true;
-        }
+        boolean excluiuASiMesmo = logado != null && logado.getId() == usuarioSelecionado.getId();
 
         try {
-            usuarioDAO.deletarUsuario(usuarioSelecionado);
-        } catch (SQLException e) {
-            erro("Erro ao excluir o usuário.");
+            usuarioService.excluir(usuarioSelecionado);
+        } catch (ServicoException e) {
+            erro(e.getMessage());
             return;
         }
 

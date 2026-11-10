@@ -22,6 +22,7 @@
          <children>
             <Label fx:id="lblUsuario" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Coleção" />
             <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#btnDesfazerOnAction" text="Desfazer" />
             <Button mnemonicParsing="false" onAction="#btnCadastrarCartaOnAction" text="Cadastrar carta" />
             <Button mnemonicParsing="false" onAction="#btnEditarUsuarioOnAction" text="Usuários" />
             <Button mnemonicParsing="false" onAction="#btnSairOnAction" text="Sair" />
