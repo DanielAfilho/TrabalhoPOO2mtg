@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/33749552/README.md)
 # Magic Card Tracker
 
 Buscador e coleção de cartas de **Magic: The Gathering**, feito em **JavaFX** com banco de dados **PostgreSQL** para o 1º trabalho de Programação Orientada a Objetos II.
