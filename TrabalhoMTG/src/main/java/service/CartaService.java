@@ -7,10 +7,6 @@ import model.Carta;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- * SERVICE LAYER — regras de negócio de carta: uma carta só pode ser salva se tiver nome, imagem
- * e ao menos um tipo; listas opcionais nunca ficam nulas; erros de banco viram mensagens de negócio.
- */
 public class CartaService {
     private final ICarta cartaDAO;
 
@@ -86,7 +82,6 @@ public class CartaService {
             throw new ServicoException("Campo vazio: escolha ao menos um tipo.");
         }
 
-        // atributos opcionais: o DAO percorre estas listas, então nunca podem ser nulas
         if (carta.getSupertipos() == null) carta.setSupertipos(new ArrayList<>());
         if (carta.getSubtipos() == null) carta.setSubtipos(new ArrayList<>());
         if (carta.getCores() == null) carta.setCores(new ArrayList<>());

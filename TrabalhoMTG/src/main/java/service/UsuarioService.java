@@ -7,10 +7,6 @@ import model.Usuario;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * SERVICE LAYER — regras de negócio de usuário: validação de credenciais, autenticação,
- * cadastro, atualização e exclusão. Conversa com o DAO; o Controller só conversa com esta classe.
- */
 public class UsuarioService {
     private final IUsuario usuarioDAO;
 

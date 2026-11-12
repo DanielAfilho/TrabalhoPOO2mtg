@@ -18,20 +18,14 @@ import model.Usuario;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * SERVICE LAYER — operações da coleção do usuário.
- *
- * Responsabilidades: escolher a estratégia de consulta (STRATEGY), transformar adquirir/remover
- * em comandos desfazíveis (COMMAND) e traduzir erros do banco em mensagens de negócio.
- * Uma instância guarda o histórico de desfazer, então a tela usa uma instância só.
- */
 public class ColecaoService {
     private final IColecao colecaoDAO;
     private final IConsulta consultaDAO;
     private final HistoricoComandos historico = new HistoricoComandos();
 
     public ColecaoService() {
-        this(new ColecaoDAO(), new ConsultaDAO());
+        this.colecaoDAO = new ColecaoDAO();
+        this.consultaDAO = new ConsultaDAO();
     }
 
     public ColecaoService(IColecao colecaoDAO, IConsulta consultaDAO) {
@@ -39,7 +33,6 @@ public class ColecaoService {
         this.consultaDAO = consultaDAO;
     }
 
-    /** Devolve as cartas do usuário e as disponíveis, ambas já filtradas. */
     public Colecao carregar(Usuario usuario, FiltroCartas filtro) throws ServicoException {
         try {
             List<Carta> minhas = consultaDAO.buscar(usuario, new CartasDoUsuario(), filtro);     // STRATEGY
@@ -74,7 +67,6 @@ public class ColecaoService {
         return historico.podeDesfazer();
     }
 
-    /** Desfaz a última aquisição/remoção e devolve a descrição do que foi desfeito. */
     public String desfazer() throws ServicoException {
         if (!historico.podeDesfazer()) {
             throw new ServicoException("Não há nenhuma ação para desfazer.");

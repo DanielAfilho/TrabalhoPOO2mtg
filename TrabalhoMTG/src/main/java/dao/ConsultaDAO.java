@@ -13,13 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Contexto do padrão STRATEGY (o escopo vem de fora) e consumidor do BUILDER ({@link FiltroCartas}).
- *
- * Antes: o DAO guardava a consulta em um atributo String mutável, concatenava valores digitados
- * pelo usuário no SQL e dependia da ordem das chamadas. Agora: a consulta é montada e executada
- * em um único método, sem estado, e todos os valores vão por PreparedStatement.
- */
 public class ConsultaDAO implements IConsulta {
 
     @Override

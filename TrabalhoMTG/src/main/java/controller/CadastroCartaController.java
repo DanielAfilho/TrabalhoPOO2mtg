@@ -54,7 +54,6 @@ public class CadastroCartaController {
     @FXML
     private Label lblMensagem;
 
-    // SERVICE LAYER: o controller não conhece mais os DAOs
     private final CartaService cartaService = new CartaService();
     private final AtributoService atributoService = new AtributoService();
     private Carta carta;
@@ -80,10 +79,6 @@ public class CadastroCartaController {
 
     }
 
-    /**
-     * Converte o formulário em uma Carta. Só trata o que é da interface (ler números dos campos);
-     * as regras de negócio (nome, imagem, tipo obrigatório) ficam no CartaService.
-     */
     private boolean lerFormulario() {
         int resistencia;
         int dano;

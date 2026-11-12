@@ -1,6 +1,5 @@
 package dao.escopo;
 
-/** PADRÃO GoF: STRATEGY (estratégia concreta) — apenas cartas que o usuário AINDA NÃO possui. */
 public class CartasFaltantes implements EscopoColecao {
 
     @Override

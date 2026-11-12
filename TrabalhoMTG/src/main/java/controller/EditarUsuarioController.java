@@ -110,8 +110,7 @@ public class EditarUsuarioController {
         try {
             Usuario atualizado = usuarioService.atualizar(
                     usuarioSelecionado.getId(), txtNome.getText(), psfSenha.getText());
-
-            // se o usuário alterou a si mesmo, a sessão precisa do nome novo
+            
             Usuario logado = GerenciadorTelas.getUsuarioLogado();
             if (logado != null && logado.getId() == atualizado.getId()) {
                 GerenciadorTelas.setUsuarioLogado(atualizado);

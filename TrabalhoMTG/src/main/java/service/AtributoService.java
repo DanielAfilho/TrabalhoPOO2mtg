@@ -5,11 +5,6 @@ import dao.IAtributo;
 
 import java.sql.SQLException;
 
-/**
- * SERVICE LAYER — monta o catálogo de atributos (tipos, supertipos, subtipos e cores) em uma
- * única operação. Antes, ColecaoController e CadastroCartaController repetiam as quatro
- * consultas ao DAO e o mesmo tratamento de erro.
- */
 public class AtributoService {
     private final IAtributo atributoDAO;
 

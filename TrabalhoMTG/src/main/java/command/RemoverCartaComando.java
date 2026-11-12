@@ -4,9 +4,9 @@ import dao.IColecao;
 
 import java.sql.SQLException;
 
-/** PADRÃO GoF: COMMAND (comando concreto) — remove uma carta da coleção; desfazer = adicionar de volta. */
+
 public class RemoverCartaComando implements Comando {
-    private final IColecao colecaoDAO; // receiver
+    private final IColecao colecaoDAO;
     private final int usuarioId;
     private final int cartaId;
 

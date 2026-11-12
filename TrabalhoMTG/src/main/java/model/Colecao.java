@@ -2,10 +2,6 @@ package model;
 
 import java.util.List;
 
-/**
- * Resultado da consulta da tela de Coleção: as cartas que o usuário possui
- * e as que ainda estão disponíveis para ele adquirir (ambas já filtradas).
- */
 public class Colecao {
     private List<Carta> cartasUsuario;
     private List<Carta> cartasDisponiveis;

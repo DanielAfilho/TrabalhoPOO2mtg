@@ -7,13 +7,6 @@ import model.atributos.Tipo;
 
 import java.util.List;
 
-/**
- * PADRÃO GoF: BUILDER (produto).
- *
- * Representa, de forma imutável, o conjunto de filtros que o usuário aplica na tela de Coleção.
- * Só pode ser criado através de {@link Builder}, que permite montar apenas os filtros desejados
- * (todos são opcionais) sem construtores com muitos parâmetros nem chamadas em ordem obrigatória.
- */
 public final class FiltroCartas {
     private final String nome;
     private final List<Tipo> tipos;
@@ -33,7 +26,6 @@ public final class FiltroCartas {
         this.resistencia = b.resistencia;
     }
 
-    /** Filtro vazio (sem nenhuma restrição). */
     public static FiltroCartas vazio() {
         return new Builder().build();
     }
@@ -42,7 +34,6 @@ public final class FiltroCartas {
         return new Builder();
     }
 
-    /** @return texto (regex, sem diferenciar maiúsculas) ou null quando não há filtro por nome */
     public String getNome() {
         return nome;
     }
@@ -63,17 +54,14 @@ public final class FiltroCartas {
         return cores;
     }
 
-    /** @return valor de dano ou null quando não há filtro por dano */
     public Integer getDano() {
         return dano;
     }
 
-    /** @return valor de resistência ou null quando não há filtro por resistência */
     public Integer getResistencia() {
         return resistencia;
     }
 
-    /** PADRÃO GoF: BUILDER (construtor passo a passo). */
     public static final class Builder {
         private String nome;
         private List<Tipo> tipos = List.of();

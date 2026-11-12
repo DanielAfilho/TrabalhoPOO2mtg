@@ -46,7 +46,6 @@ public class ColecaoController {
     @FXML private FlowPane flowMinhasCartas;
     @FXML private FlowPane flowDisponiveis;
 
-    // SERVICE LAYER: o controller não conhece mais os DAOs
     private final AtributoService atributoService = new AtributoService();
     private final ColecaoService colecaoService = new ColecaoService();
     private Usuario usuarioLogado;
@@ -120,7 +119,6 @@ public class ColecaoController {
         }
     }
 
-    /** PADRÃO BUILDER: monta o filtro só com o que o usuário preencheu na tela. */
     private FiltroCartas montarFiltro() {
         return FiltroCartas.builder()
                 .nome(txtNome.getText())
@@ -133,7 +131,6 @@ public class ColecaoController {
                 .build();
     }
 
-    /** @return o número digitado, ou null se o campo estiver vazio ou inválido */
     private Integer lerInteiro(TextField campo) {
         try {
             return Integer.valueOf(campo.getText().trim());
@@ -169,7 +166,6 @@ public class ColecaoController {
         carregarCartas();
     }
 
-    /** PADRÃO COMMAND: desfaz a última aquisição ou remoção de carta. */
     @FXML
     private void btnDesfazerOnAction() {
         try {

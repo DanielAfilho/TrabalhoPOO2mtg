@@ -10,7 +10,6 @@ import service.ServicoException;
 import service.UsuarioService;
 
 public class LoginController {
-    // SERVICE LAYER: o controller não conhece mais o DAO
     private final UsuarioService usuarioService = new UsuarioService();
 
     @FXML
